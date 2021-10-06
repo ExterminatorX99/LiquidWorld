@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
@@ -13,9 +10,13 @@ namespace LiquidWorld
 		[Tooltip("Whether the mod is active")]
 		public bool Active;
 
+		[Tooltip("Single:   Blocks release what is selected by LiquidType\n" +
+				 "Chance:   Blocks release one of the activated liquids\n" +
+				 "Combined: Blocks release multiple liquids")]
 		[DefaultValue(ReplaceType.Single)]
 		public ReplaceType ReplaceType;
 
+		[Tooltip("Only works with ReplaceType: Combine")]
 		[DefaultValue(false)]
 		public bool BEEEEEES;
 
@@ -63,6 +64,13 @@ namespace LiquidWorld
 
 		public static LiquidConfig Instance => ModContent.GetInstance<LiquidConfig>();
 		public override ConfigScope Mode => ConfigScope.ServerSide;
+
+		public override void OnChanged()
+		{
+			if (BEEEEEES)
+				ReplaceType = ReplaceType.Combined;
+		}
+
 		public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref string message) => false;
 	}
 }

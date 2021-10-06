@@ -4,6 +4,6 @@ namespace LiquidWorld
 	{
 		Single,
 		Chance,
-		Combine
+		Combined
 	}
 }

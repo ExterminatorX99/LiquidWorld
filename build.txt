@@ -1,4 +1,4 @@
 displayName = Liquid World
 author = Exterminator
-version = 0.1.1
+version = 0.1.2
 includeSource = true

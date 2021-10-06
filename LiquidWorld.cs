@@ -154,7 +154,7 @@ namespace LiquidWorld
 					SetupRandom(config);
 					tile.PlaceLiquid(WeightedRandom.Get(), config.LiquidAmount);
 					break;
-				case ReplaceType.Combine:
+				case ReplaceType.Combined:
 					SetupRandom(config);
 					int liquid1 = WeightedRandom.Get();
 					int liquid2 = WeightedRandom.Get();
@@ -187,16 +187,17 @@ namespace LiquidWorld
 		public static void PlaceTile(int i, int j)
 		{
 			Tile tile = Main.tile[i, j];
+			LiquidConfig config = LiquidConfig.Instance;
+
 			tile.IsActuated = false;
 			tile.type = 0;
 
-			if (WorldGen.gen)
+			if (WorldGen.gen || !config.Active)
 				return;
 
 			if (TileTypeToPlace is not { } type)
 				return;
 			TileTypeToPlace = null;
-			LiquidConfig config = LiquidConfig.Instance;
 
 			if (type is TileID.CrispyHoneyBlock && (config.BEEEEEES || WorldGen.notTheBees))
 				SpawnBees(i, j);
