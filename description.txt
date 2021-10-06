@@ -1,1 +1,15 @@
-Mod Template is a pretty cool mod, it does...this. Modify this file with a description of your mod.
+Liquid World makes your wet dreams come true.
+
+Now you can always experience the amazing joy of mining Helltone.
+Except it doesn't have to be lava. I can be water or honey.
+You can even have them all spawn at random.
+Or you can have multiple spawn and replace you mined blocks with Obsidian, Honey or Crispy Honey.
+
+
+
+
+
+
+
+PS:
+Check the config if you love bees.

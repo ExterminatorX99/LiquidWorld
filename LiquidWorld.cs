@@ -201,7 +201,7 @@ namespace LiquidWorld
 			if (type is TileID.CrispyHoneyBlock && (config.BEEEEEES || WorldGen.notTheBees))
 				SpawnBees(i, j);
 			else
-				WorldGen.PlaceTile(i * 16, j * 16, type);
+				WorldGen.PlaceTile(i, j, type);
 		}
 
 		// Yoinked from vanilla
