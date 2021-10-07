@@ -57,44 +57,7 @@ namespace LiquidWorld
 				return;
 			}
 
-			ILLabel skipLabel = c.DefineLabel();
-
-			c.Emit(OpCodes.Br_S, skipLabel);
-
-			c.GotoNext(MoveType.After, branchInstructions);
-
-			c.MarkLabel(skipLabel);
-
-			Func<Instruction, bool>[] lavaInstructions =
-			{
-				i => i.MatchLdloc(0),
-				i => i.MatchLdcI4(1),
-				i => i.MatchCallOrCallvirt<Tile>("lava")
-			};
-
-			if (!c.TryGotoNext(MoveType.After, lavaInstructions))
-			{
-				Logger.Error("Failed to find Hellstone 'lava' instructions");
-				return;
-			}
-
-			Func<Instruction, bool>[] amountInstructions =
-			{
-				i => i.MatchLdloc(0),
-				i => i.MatchLdcI4(128),
-				i => i.MatchStfld<Tile>("liquid")
-			};
-
-			if (!c.TryGotoNext(MoveType.After, amountInstructions))
-			{
-				Logger.Error("Failed to find Hellstone 'liquid' instructions");
-				return;
-			}
-
-			c.MarkLabel(skipLabel);
-
-			c.Emit(OpCodes.Ldarg_0);
-			c.Emit(OpCodes.Ldarg_1);
+			c.Emit(OpCodes.Ldloc_0);
 			c.Emit(OpCodes.Call, typeof(LiquidWorld).GetMethod(nameof(LiquidStuff)));
 		}
 
@@ -112,43 +75,29 @@ namespace LiquidWorld
 				i => i.MatchCallvirt<Tile>("inActive")
 			};
 
-			if (!c.TryGotoNext(breakInstructions))
+			if (!c.TryGotoNext(MoveType.After, breakInstructions))
 			{
 				Logger.Error("Failed to find KillTile 'break` instructions");
 				return;
 			}
-
-			ILLabel skipBlockBreak = c.DefineLabel();
-
-			c.Emit(OpCodes.Br_S, skipBlockBreak);
-
-			c.GotoNext(MoveType.After, breakInstructions);
-
-			c.MarkLabel(skipBlockBreak);
 
 			c.Emit(OpCodes.Ldarg_0);
 			c.Emit(OpCodes.Ldarg_1);
 			c.Emit(OpCodes.Call, typeof(LiquidWorld).GetMethod(nameof(PlaceTile)));
 		}
 
-		public static void LiquidStuff(int i, int j)
+		public static void LiquidStuff(Tile tile)
 		{
-			Tile tile = Main.tile[i, j];
 			LiquidConfig config = LiquidConfig.Instance;
 
 			// If not active, do vanilla
 			if (WorldGen.gen || !config.Active)
-			{
-				if (tile.type == TileID.Hellstone)
-					tile.PlaceLiquid(LiquidID.Lava, 128);
-
 				return;
-			}
 
 			switch (config.ReplaceType)
 			{
 				case ReplaceType.Single:
-					tile.PlaceLiquid((int)config.LiquidType, config.LiquidAmount);
+					tile.PlaceLiquid((int) config.LiquidType, config.LiquidAmount);
 					break;
 				case ReplaceType.Chance:
 					SetupRandom(config);
@@ -186,11 +135,7 @@ namespace LiquidWorld
 
 		public static void PlaceTile(int i, int j)
 		{
-			Tile tile = Main.tile[i, j];
 			LiquidConfig config = LiquidConfig.Instance;
-
-			tile.IsActuated = false;
-			tile.type = 0;
 
 			if (WorldGen.gen || !config.Active)
 				return;
