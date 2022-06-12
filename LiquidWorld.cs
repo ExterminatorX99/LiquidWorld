@@ -2,6 +2,7 @@ using System;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
@@ -163,7 +164,7 @@ namespace LiquidWorld
 		}
 
 		// Yoinked from vanilla
-		private static void SpawnBees(int i, int j)
+		private static void SpawnBees(int x, int y)
 		{
 			if (Main.netMode == NetmodeID.MultiplayerClient || Main.rand.NextBool(2))
 				return;
@@ -172,13 +173,13 @@ namespace LiquidWorld
 			if (Main.rand.NextBool(3))
 				count = 2;
 
-			for (int _ = 0; _ < count; _++)
+			for (int i = 0; i < count; i++)
 			{
-				int npcType = Main.rand.Next(210, 212);
-				NPC npc     = Main.npc[NPC.NewNPC(i * 16 + 8, j * 16 + 15, npcType, 1)];
+				int type = Main.rand.Next(210, 212);
+				NPC npc = Main.npc[NPC.NewNPC(new EntitySource_TileBreak(x, y), x * 16 + 8, y * 16 + 15, type, 1)];
 				npc.velocity.X = Main.rand.Next(-200, 201) * 0.002f;
 				npc.velocity.Y = Main.rand.Next(-200, 201) * 0.002f;
-				npc.netUpdate  = true;
+				npc.netUpdate = true;
 			}
 		}
 
